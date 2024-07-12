@@ -1,6 +1,12 @@
 import React from 'react';
 
 const SongItem = ({ song, isActive, onSelect }) => {
+  const formatDuration = (durationInSeconds) => {
+    const minutes = Math.floor(durationInSeconds / 60);
+    const seconds = Math.floor(durationInSeconds % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
   return (
     <div
       className={`song-item ${isActive ? 'active' : ''}`}
@@ -14,7 +20,7 @@ const SongItem = ({ song, isActive, onSelect }) => {
         <h3>{song.name}</h3>
         <p>{song.artist}</p>
       </div>
-      <span className="duration">{song.duration}</span>
+      <span className="duration">{formatDuration(song.duration || 0)}</span>
     </div>
   );
 };

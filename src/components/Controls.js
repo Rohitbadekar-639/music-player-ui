@@ -1,7 +1,7 @@
 import React from 'react';
-import { FaPlay, FaPause, FaStepForward, FaStepBackward } from 'react-icons/fa';
+import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaVolumeUp } from 'react-icons/fa';
 
-const Controls = ({ isPlaying, onPlay, onNext, onPrevious }) => {
+const Controls = ({ isPlaying, onPlay, onNext, onPrevious, volume, onVolumeChange }) => {
   return (
     <div className="controls">
       <button onClick={onPrevious}>
@@ -13,6 +13,9 @@ const Controls = ({ isPlaying, onPlay, onNext, onPrevious }) => {
       <button onClick={onNext}>
         <FaStepForward />
       </button>
+      <div className="volume-control">
+        <FaVolumeUp />
+      </div>
     </div>
   );
 };

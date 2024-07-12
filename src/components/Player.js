@@ -1,68 +1,113 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Controls from './Controls';
+// import { FaVolumeUp } from 'react-icons/fa';
 
-const Player = ({ currentSong, onNext, onPrevious }) => {
+const Player = ({ currentSong, onNext, onPrevious, audioRef }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const audioRef = useRef(null);
+  const [setVolume] = useState(1);
+
+  const handleTimeUpdate = useCallback(() => {
+    setCurrentTime(audioRef.current.currentTime);
+  }, [audioRef]);
+
+  const handleLoadedMetadata = useCallback(() => {
+    setDuration(audioRef.current.duration);
+  }, [audioRef]);
 
   useEffect(() => {
-    if (currentSong) {
-      setIsPlaying(true);
-      audioRef.current.play();
+    const audio = audioRef.current;
+
+    if (audio) {
+      audio.addEventListener('timeupdate', handleTimeUpdate);
+      audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.addEventListener('ended', onNext);
+
+      return () => {
+        audio.removeEventListener('timeupdate', handleTimeUpdate);
+        audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        audio.removeEventListener('ended', onNext);
+      };
     }
-  }, [currentSong]);
+  }, [audioRef, handleTimeUpdate, handleLoadedMetadata, onNext]);
+
+  useEffect(() => {
+    if (currentSong && audioRef.current) {
+      audioRef.current.src = currentSong.url;
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch(error => console.error("Playback failed", error));
+    }
+  }, [currentSong, audioRef]);
 
   const handlePlay = () => {
+    if (!audioRef.current) return;
+
     if (isPlaying) {
       audioRef.current.pause();
     } else {
-      audioRef.current.play();
+      audioRef.current.play().catch(error => console.error("Playback failed", error));
     }
     setIsPlaying(!isPlaying);
   };
 
-  const handleTimeUpdate = () => {
-    setCurrentTime(audioRef.current.currentTime);
-    setDuration(audioRef.current.duration);
-  };
-
   const handleSeek = (e) => {
-    const seekTime = e.target.value;
+    if (!audioRef.current) return;
+
+    const seekTime = parseFloat(e.target.value);
     audioRef.current.currentTime = seekTime;
     setCurrentTime(seekTime);
+  };
+
+  const handleVolumeChange = (e) => {
+    if (!audioRef.current) return;
+
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    audioRef.current.volume = newVolume;
+  };
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
   return (
     <div className="player">
       {currentSong && (
         <>
+          <h2>{currentSong.name}</h2>
+          <p>{currentSong.artist}</p>
           <img
             src={`https://cms.samespace.com/assets/${currentSong.cover}`}
             alt={currentSong.name}
           />
-          <h2>{currentSong.name}</h2>
-          <p>{currentSong.artist}</p>
-          <audio
-            ref={audioRef}
-            src={currentSong.url}
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={onNext}
-          />
-          <input
-            type="range"
-            min={0}
-            max={duration}
-            value={currentTime}
-            onChange={handleSeek}
-          />
-          <Controls
-            isPlaying={isPlaying}
-            onPlay={handlePlay}
-            onNext={onNext}
-            onPrevious={onPrevious}
-          />
+          <div className="progress-container">
+            <span className="time current">{formatTime(currentTime)}</span>
+            <input
+              type="range"
+              className="progress-bar"
+              min={0}
+              max={duration}
+              value={currentTime}
+              onChange={handleSeek}
+            />
+            <span className="time total">{formatTime(duration)}</span>
+          </div>
+          <div className="player-controls">
+            <button className="more-options">•••</button>
+            <div className="controls">
+              <Controls
+                isPlaying={isPlaying}
+                onPlay={handlePlay}
+                onNext={onNext}
+                onPrevious={onPrevious}
+              />
+            </div>
+            
+          </div>
         </>
       )}
     </div>
