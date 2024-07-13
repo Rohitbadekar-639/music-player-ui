@@ -147,6 +147,7 @@ nav button.active {
 
 .duration {
   font-size: 12px;
+  font-weight: 500;
   color: #b3b3b3;
 }
 
@@ -236,7 +237,7 @@ nav button.active {
 /* Controls styles */
 .controls {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   align-items: center;
   flex: 1;
   justify-content: center;
@@ -247,7 +248,6 @@ nav button.active {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 10px;
   box-sizing: border-box;
 }
 
@@ -255,9 +255,10 @@ nav button.active {
   background: none;
   border: none;
   color: #ffffff;
-  font-size: 25px;
+  font-size: 24px;
   cursor: pointer;
   align-self: center;
+  transition: color 0.3s ease;
 }
 
 .more-options:hover {
@@ -278,15 +279,14 @@ nav button.active {
 }
 
 .volume-control {
-  gap: 10px;
-  font-size: 25px;
-}
-
-.volume-control-bar {
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  transition: color 0.3s ease;
 }
 
 .volume-control:hover {
+  cursor: pointer;
   color: #1db954;
 }
 
@@ -416,7 +416,7 @@ nav button.active {
   }
 
   .player {
-    padding: 2rem;
+    padding: 1rem;
   }
 
   .profile-icon {

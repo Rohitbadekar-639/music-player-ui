@@ -1,6 +1,6 @@
 .profile-icon {
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
     left: 12rem;
 }
 
@@ -27,8 +27,8 @@
 
 @media (max-width: 768px) {
     .profile-icon {
-        left: 0.5rem;
-        bottom: 8px;
+        left: 1rem;
+        bottom: 10px;
     }
     
     .avatar {

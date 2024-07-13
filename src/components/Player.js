@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Controls from './Controls';
-// import { FaVolumeUp } from 'react-icons/fa';
+import { FaVolumeUp } from 'react-icons/fa';
 
 const Player = ({ currentSong, onNext, onPrevious, audioRef }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [setVolume] = useState(1);
+  const [volume, setVolume] = useState(1);
 
   const handleTimeUpdate = useCallback(() => {
     setCurrentTime(audioRef.current.currentTime);
@@ -105,6 +105,9 @@ const Player = ({ currentSong, onNext, onPrevious, audioRef }) => {
                 onNext={onNext}
                 onPrevious={onPrevious}
               />
+              <div className="volume-control">
+                <FaVolumeUp />
+              </div>
             </div>                    
           </div>
         </>
