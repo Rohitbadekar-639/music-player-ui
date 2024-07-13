@@ -7,7 +7,6 @@ import Player from './components/Player';
 import ProfileIcon from './components/ProfileIcon';
 import { fetchSongs } from './utils/api';
 import './styles/index.css';
-import './components/ProfileIcon.css';
 
 const App = () => {
   const [songs, setSongs] = useState([]);

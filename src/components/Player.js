@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Controls from './Controls';
-import { FaVolumeUp } from 'react-icons/fa';
+import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 
 const Player = ({ currentSong, onNext, onPrevious, audioRef }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
 
   const handleTimeUpdate = useCallback(() => {
     setCurrentTime(audioRef.current.currentTime);
@@ -60,12 +60,11 @@ const Player = ({ currentSong, onNext, onPrevious, audioRef }) => {
     setCurrentTime(seekTime);
   };
 
-  const handleVolumeChange = (e) => {
+  const handleMute = () => {
     if (!audioRef.current) return;
 
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    audioRef.current.volume = newVolume;
+    audioRef.current.muted = !audioRef.current.muted;
+    setIsMuted(!isMuted);
   };
 
   const formatTime = (time) => {
@@ -105,10 +104,10 @@ const Player = ({ currentSong, onNext, onPrevious, audioRef }) => {
                 onNext={onNext}
                 onPrevious={onPrevious}
               />
-              <div className="volume-control">
-                <FaVolumeUp />
+              <div className="volume-control" onClick={handleMute}>
+                {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
               </div>
-            </div>                    
+            </div>
           </div>
         </>
       )}
