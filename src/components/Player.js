@@ -105,8 +105,7 @@ const Player = ({ currentSong, onNext, onPrevious, audioRef }) => {
                 onNext={onNext}
                 onPrevious={onPrevious}
               />
-            </div>
-            
+            </div>                    
           </div>
         </>
       )}
